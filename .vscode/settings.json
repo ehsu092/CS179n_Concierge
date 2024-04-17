@@ -51,5 +51,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Concierge Git.sln"
+    "dotnet.defaultSolution": "CS179n_Concierge.sln"
 }
