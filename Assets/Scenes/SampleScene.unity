@@ -12046,7 +12046,7 @@ MonoBehaviour:
       m_Calls: []
   NodeID: 4
   TMPFont: {fileID: 0}
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: b47738bc118a9ea4b923448546bb121a, type: 3}
   Audio: {fileID: 0}
 --- !u!43 &361861108
 Mesh:
@@ -44292,12 +44292,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CurrentIDCounter: 5
-  json: '{"Options":[{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":3}],"EditorInfo":{"isRoot":false,"xPos":-91,"yPos":177},"ID":1,"ParamActions":[],"TMPFontGUID":null,"Text":"Yes!","parentUIDs":[0],"SpeechUID":-1},{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":170,"yPos":177},"ID":2,"ParamActions":[],"TMPFontGUID":null,"Text":"Not
-    right now.","parentUIDs":[0],"SpeechUID":-1}],"Parameters":[],"SpeechNodes":[{"Connections":[{"__type":"EditableOptionConnection:#DialogueEditor","Conditions":[],"NodeUID":1},{"__type":"EditableOptionConnection:#DialogueEditor","Conditions":[],"NodeUID":2}],"EditorInfo":{"isRoot":true,"xPos":33,"yPos":22},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Welcome!
+  json: '{"Options":[{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":3}],"EditorInfo":{"isRoot":false,"xPos":169,"yPos":177},"ID":1,"ParamActions":[],"TMPFontGUID":null,"Text":"Yes!","parentUIDs":[0],"SpeechUID":-1},{"Connections":[{"__type":"EditableSpeechConnection:#DialogueEditor","Conditions":[],"NodeUID":4}],"EditorInfo":{"isRoot":false,"xPos":430,"yPos":177},"ID":2,"ParamActions":[],"TMPFontGUID":null,"Text":"Not
+    right now.","parentUIDs":[0],"SpeechUID":-1}],"Parameters":[],"SpeechNodes":[{"Connections":[{"__type":"EditableOptionConnection:#DialogueEditor","Conditions":[],"NodeUID":1},{"__type":"EditableOptionConnection:#DialogueEditor","Conditions":[],"NodeUID":2}],"EditorInfo":{"isRoot":true,"xPos":293,"yPos":22},"ID":0,"ParamActions":[],"TMPFontGUID":null,"Text":"Welcome!
     Need a room?","parentUIDs":[],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Frontdesk
-    Worker","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0},{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":-94,"yPos":262},"ID":3,"ParamActions":[],"TMPFontGUID":null,"Text":"The
+    Worker","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0},{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":166,"yPos":262},"ID":3,"ParamActions":[],"TMPFontGUID":null,"Text":"The
     rain seems pretty bad outside. You know what, I''ll let you stay for free for
     a night. Here''s a key to room 4!","parentUIDs":[1],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Frontdesk
+    Worker","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0},{"Connections":[],"EditorInfo":{"isRoot":false,"xPos":433,"yPos":262},"ID":4,"ParamActions":[],"TMPFontGUID":null,"Text":"Hmm...it
+    is raining pretty hard outside...","parentUIDs":[2],"AdvanceDialogueAutomatically":false,"AudioGUID":null,"AutoAdvanceShouldDisplayOption":false,"IconGUID":null,"Name":"Frontdesk
     Worker","OptionUIDs":null,"SpeechUID":0,"TimeUntilAdvance":0,"Volume":0}]}'
   saveVersion: 110
   DefaultName: 
