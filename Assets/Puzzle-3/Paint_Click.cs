@@ -7,6 +7,8 @@ public class Paint_Click : MonoBehaviour
     public GameObject Paint;
     public float interactionDistance = 40;
 
+    public int paintCount = 0;
+
     private GameObject player;
 
     // Start is called before the first frame update
@@ -33,8 +35,9 @@ public class Paint_Click : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E) && IsPlayerClose())
         {
-            //Paint.enable = false;
-            Debug.LogError("clicked");
+            Paint.SetActive(false);
+            paintCount++;
+            //Debug.Log("paintCount = " + paintCount);
         }
     }
 
@@ -53,9 +56,7 @@ public class Paint_Click : MonoBehaviour
         }
         else
         {
-            Debug.LogError("not clicked");
             return false;
         }
-        Debug.LogError("wack");
     }
 }
