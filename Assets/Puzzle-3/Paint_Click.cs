@@ -35,9 +35,12 @@ public class Paint_Click : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E) && IsPlayerClose())
         {
-            Paint.SetActive(false);
-            paintCount++;
-            //Debug.Log("paintCount = " + paintCount);
+            if(Paint.activeSelf){
+                Paint.SetActive(false);
+                paintCount++;
+            } 
+            
+            Debug.Log("paintCount = " + paintCount);
         }
     }
 
