@@ -5,7 +5,7 @@ using UnityEngine;
 public class Paint_Click : MonoBehaviour
 {
     public GameObject Paint;
-    public float interactionDistance = 40;
+    public float interactionDistance = 20;
 
     public int paintCount = 0;
 
@@ -14,6 +14,7 @@ public class Paint_Click : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         // Find the player object by accessing the first person controller
         GameObject firstPersonController = GameObject.Find("Character");
         if (firstPersonController != null)
