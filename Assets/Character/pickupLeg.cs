@@ -1,31 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;  // Add this to use UI components
+// using System.Collections;
+// using System.Collections.Generic;
+// using UnityEngine;
+// using UnityEngine.UI;  // Add this to use UI components
 
-public class PickupLeg : MonoBehaviour
-{
-    public GameObject interactionText;  // Reference to the UI Text element
-    // public GameObject legNotPickup;
-    // public GameObject legPickup;
-    public AudioSource pickupSound;
-    public float interactionDistance = 2.0f;  // Distance within which the Character can interact
+// public class PickupLeg : MonoBehaviour
+// {
+//     public GameObject interactionText;  // Reference to the UI Text element
+//     // public GameObject legNotPickup;
+//     // public GameObject legPickup;
+//     public AudioSource pickupSound;
+//     public float interactionDistance = 2.0f;  // Distance within which the Character can interact
 
-    private bool isInteractable;
-    // private GameObject Character;
-    public object switch_scence;
-    void Start(){
-        switch_scence.SetActive(false);
-    }
+//     private bool isInteractable;
+//     // private GameObject Character;
+//     public object switch_scence;
+//     void Start(){
+//         switch_scence.SetActive(false);
+//     }
 
-    private void OnTriggerStay(collider other){
-        if(other.gameObject.tag == "MainCamera"){
-            if(Input.GetKeyDown(KeyCode.E)){
-                this.gameObject.SetActive(false);
-                switch_scence.SetActive(true);
-            }
-        }
-    }
+//     private void OnTriggerStay(collider other){
+//         if(other.gameObject.tag == "MainCamera"){
+//             if(Input.GetKeyDown(KeyCode.E)){
+//                 this.gameObject.SetActive(false);
+//                 switch_scence.SetActive(true);
+//             }
+//         }
+//     }
     // void Start()
     // {
     //     // Find the Character object by accessing the first person controller
@@ -133,4 +133,46 @@ public class PickupLeg : MonoBehaviour
     //         isInteractable = false;
     //     }
     // }
+// }
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;  // Add this to use UI components
+
+public class PickupLeg : MonoBehaviour
+{
+    public GameObject interactionText;
+    public AudioSource pickupSound;
+    public GameObject switchScene;
+    public float interactionDistance = 2.0f;
+
+    private bool isInteractable;
+
+    void Start()
+    {
+        if (switchScene != null)
+        {
+            switchScene.SetActive(false);
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player")) // Assuming player has "Player" tag
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                gameObject.SetActive(false); // Disable the leg object
+                if (pickupSound != null)
+                {
+                    pickupSound.Play();
+                }
+                if (switchScene != null)
+                {
+                    switchScene.SetActive(true); // Activate the object responsible for scene switching
+                }
+            }
+        }
+    }
 }
