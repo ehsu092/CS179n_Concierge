@@ -11,6 +11,7 @@ public class DoorController : MonoBehaviour
     public float interactionDistance = 2.0f;
 
     private GameObject player;
+    
 
     void Start()
     {

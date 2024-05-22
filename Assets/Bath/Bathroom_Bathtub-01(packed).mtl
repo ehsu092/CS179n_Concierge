@@ -1,0 +1,74 @@
+# Blender MTL File: 'Bathroom_Bathtub-01(packed).blend'
+# Material Count: 7
+
+newmtl Bathroom_Wall-Front
+Ns 900.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump -bm 0.200000 /Users/louiemigueldeleoon/Desktop/#Postindepth3D-YouTube/textures/Concrete_011_NORM.jpg
+map_Kd /Users/louiemigueldeleoon/Desktop/#Postindepth3D-YouTube/textures/Concrete_011_COLOR.jpg
+
+newmtl Bathroom_Wall-Right
+Ns 81.000006
+Ka 1.000000 1.000000 1.000000
+Kd 0.737911 0.701305 0.597941
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Bathtub
+Ns 900.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Bathtub_Flooring
+Ns 900.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump -bm 0.200000 /Users/louiemigueldeleoon/Desktop/#Postindepth3D-YouTube/textures/Concrete_011_NORM.jpg
+map_Kd /Users/louiemigueldeleoon/Desktop/#Postindepth3D-YouTube/textures/Concrete_011_COLOR.jpg
+
+newmtl Faucet_Chrome
+Ns 704.289940
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+
+newmtl Mirror
+Ns 900.000000
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+
+newmtl None
+Ns 500
+Ka 0.8 0.8 0.8
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
