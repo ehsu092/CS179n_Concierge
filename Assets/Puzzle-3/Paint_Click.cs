@@ -5,9 +5,10 @@ using UnityEngine;
 public class Paint_Click : MonoBehaviour
 {
     public GameObject Paint;
-    public float interactionDistance = 20;
+    public float interactionDistance = 15;
 
-    public int paintCount = 0;
+    public static int paintCount = 0;
+    public static bool puzzleStatus = false; 
 
     private GameObject player;
 
@@ -34,14 +35,26 @@ public class Paint_Click : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && IsPlayerClose())
-        {
-            if(Paint.activeSelf){
-                Paint.SetActive(false);
-                paintCount++;
-            } 
-            
-            Debug.Log("paintCount = " + paintCount);
+        if (puzzleStatus == false){
+            if (Input.GetKeyDown(KeyCode.E) && IsPlayerClose())
+            {
+                if(Paint.activeSelf){
+                    Paint.SetActive(false);
+                    paintCount++;
+                } 
+                
+                Debug.Log("paintCount = " + paintCount);
+            }
+
+            //currently not have room paint
+            if(paintCount >= 4){
+                puzzleStatus = true;
+            }
+        }
+        
+
+        if (puzzleStatus == true){
+            //puzzle finish
         }
     }
 
