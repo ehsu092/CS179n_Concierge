@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;  // Add this to use UI components
 
 public class DoorController : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class DoorController : MonoBehaviour
     public float interactionDistance = 2.0f;
 
     private GameObject player;
-    
+    public Text interactionText;  // Reference to the UI Text element
 
     void Start()
     {
@@ -28,6 +29,12 @@ public class DoorController : MonoBehaviour
         else
         {
             Debug.LogError("FPSController not found. Make sure the FPSController object is in the scene.");
+        }
+
+        // Hide the interaction text initially
+        if (interactionText != null)
+        {
+            interactionText.gameObject.SetActive(false);
         }
     }
 
@@ -54,8 +61,23 @@ public class DoorController : MonoBehaviour
                 door.transform.localEulerAngles = Vector3.Lerp(currentRot, new Vector3(currentRot.x, closeRot, currentRot.z), speed * Time.deltaTime);
             }
         }
-    }
 
+        // Show or hide the interaction text based on the player's distance to the door
+        if (IsPlayerClose())
+        {
+            if (interactionText != null)
+            {
+                interactionText.gameObject.SetActive(true);
+            }
+        }
+        else
+        {
+            if (interactionText != null)
+            {
+                interactionText.gameObject.SetActive(false);
+            }
+        }
+    }
 
     public void ToggleDoor()
     {
