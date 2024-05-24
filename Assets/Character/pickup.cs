@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections; // Required for using Coroutines
 
 public class Pickup : MonoBehaviour
 {
@@ -7,10 +8,16 @@ public class Pickup : MonoBehaviour
     public Transform weaponParent;
     public float dropForce = 5f; // Customize drop force according to your needs
     public float pickupDistance = 2f; // Distance within which the item can be picked up
-
-    public Text pickupText; // Reference to the UI text element for displaying pickup text
+    public float inputX; // X coordinate for the drop challenge position
+    public float inputY; // Y coordinate for the drop challenge position
+    public float inputZ; // Z coordinate for the drop challenge position
+    public float challengeThreshold = 0.7f; // Threshold to determine if challenge is passed (70% accuracy)
+    public Text successText; // Text to display when challenge is passed
+    public Text pickupPromptText; // Text to prompt for pickup
 
     private bool isPickedUp = false; // Flag to track if the object is picked up
+    private int challenge = 0; // Challenge count, initialized to 0
+    private GameObject bottoms; // Reference to the "Bottoms" object
 
     // Start is called before the first frame update
     void Start()
@@ -18,10 +25,24 @@ public class Pickup : MonoBehaviour
         // Make sure the gun is initially kinematic
         Gun.GetComponent<Rigidbody>().isKinematic = true;
 
-        // Hide the pickup text initially
-        if (pickupText != null)
+        // Disable success text initially
+        if (successText != null)
         {
-            pickupText.gameObject.SetActive(false);
+            successText.gameObject.SetActive(false);
+        }
+
+        // Disable pickup prompt text initially
+        if (pickupPromptText != null)
+        {
+            pickupPromptText.gameObject.SetActive(false);
+        }
+
+        // Find the "Bottoms" object in the scene
+        bottoms = GameObject.Find("Bottoms");
+
+        if (bottoms == null)
+        {
+            Debug.LogError("Bottoms object not found in the scene.");
         }
     }
 
@@ -32,6 +53,9 @@ public class Pickup : MonoBehaviour
         {
             Drop();
         }
+
+        // Output challenge status
+        Debug.Log("Challenge Count: " + challenge);
     }
 
     void Drop()
@@ -53,10 +77,25 @@ public class Pickup : MonoBehaviour
         // Reset the picked up flag
         isPickedUp = false;
 
-        // Hide the pickup text
-        if (pickupText != null)
+        if (bottoms != null)
         {
-            pickupText.gameObject.SetActive(false);
+            // Get the position of the "Bottoms" object
+            Vector3 bottomsPosition = bottoms.transform.position;
+            // Provided challenge position from input
+            Vector3 challengePosition = new Vector3(inputX, inputY, inputZ);
+            // Distance between dropped position and "Bottoms" position
+            float distanceToChallenge = Vector3.Distance(Gun.transform.position, challengePosition);
+            // Tolerance range based on challenge threshold
+            float allowedDistance = challengeThreshold * pickupDistance;
+
+            if (distanceToChallenge <= allowedDistance)
+            {
+                // Increase the challenge count
+                challenge++;
+
+                // Start coroutine to display success text after 5 seconds
+                StartCoroutine(DisplaySuccessTextWithDelay(2f));
+            }
         }
     }
 
@@ -78,10 +117,10 @@ public class Pickup : MonoBehaviour
         // Set the picked up flag
         isPickedUp = true;
 
-        // Hide the pickup text
-        if (pickupText != null)
+        // Disable pickup prompt text
+        if (pickupPromptText != null)
         {
-            pickupText.gameObject.SetActive(false);
+            pickupPromptText.gameObject.SetActive(false);
         }
     }
 
@@ -93,10 +132,10 @@ public class Pickup : MonoBehaviour
             float distance = Vector3.Distance(transform.position, other.transform.position);
             if (distance <= pickupDistance)
             {
-                // Show pickup text
-                if (pickupText != null)
+                // Display pickup prompt text
+                if (pickupPromptText != null)
                 {
-                    pickupText.gameObject.SetActive(true);
+                    pickupPromptText.gameObject.SetActive(true);
                 }
 
                 // Check for pickup input
@@ -107,12 +146,23 @@ public class Pickup : MonoBehaviour
             }
             else
             {
-                // Hide pickup text if player is not within pickup distance
-                if (pickupText != null)
+                // Hide pickup prompt text if player is not within pickup distance
+                if (pickupPromptText != null)
                 {
-                    pickupText.gameObject.SetActive(false);
+                    pickupPromptText.gameObject.SetActive(false);
                 }
             }
+        }
+    }
+
+    // Coroutine to display success text after a delay
+    IEnumerator DisplaySuccessTextWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (successText != null)
+        {
+            successText.gameObject.SetActive(true);
         }
     }
 }
