@@ -156,13 +156,21 @@ public class Pickup : MonoBehaviour
     }
 
     // Coroutine to display success text after a delay
-    IEnumerator DisplaySuccessTextWithDelay(float delay)
+   IEnumerator DisplaySuccessTextWithDelay(float delay)
     {
+        // Wait for the initial delay
         yield return new WaitForSeconds(delay);
 
+        // Activate the success text if it exists
         if (successText != null)
         {
             successText.gameObject.SetActive(true);
+
+            // Wait for 3 seconds
+            yield return new WaitForSeconds(3f);
+
+            // Deactivate the success text
+            successText.gameObject.SetActive(false);
         }
     }
 }
