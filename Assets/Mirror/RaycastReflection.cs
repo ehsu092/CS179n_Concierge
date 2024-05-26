@@ -7,19 +7,30 @@ public class RaycastReflection : MonoBehaviour
 {
     public int reflections;
     public float maxLength;
+    public GameObject spotlightPrefab; // Reference to the spotlight prefab
 
     private LineRenderer lineRenderer;
     private Ray ray;
     private RaycastHit hit;
     private Vector3 direction;
+    private GameObject spotlight; // Reference to the spotlight GameObject
 
     private void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
+
+        // Instantiate the spotlight GameObject from the prefab
+        if (spotlightPrefab != null)
+        {
+            spotlight = Instantiate(spotlightPrefab);
+            spotlight.SetActive(false); // Initially hide the spotlight
+        }
     }
 
     private void LateUpdate()
     {
+        bool mirrorHit = false; // Flag to track if a mirror is hit by the ray
+
         // Initialize the ray to start from the object's position and move in its forward direction
         ray = new Ray(transform.position, transform.forward);
 
@@ -33,8 +44,6 @@ public class RaycastReflection : MonoBehaviour
         {
             if (Physics.Raycast(ray.origin, ray.direction, out hit, remainingLength))
             {
-                Debug.Log("Hit: " + hit.collider.name); // Log the name of the hit object
-
                 lineRenderer.positionCount += 1;
                 lineRenderer.SetPosition(lineRenderer.positionCount - 1, hit.point);
                 remainingLength -= Vector3.Distance(ray.origin, hit.point);
@@ -43,7 +52,7 @@ public class RaycastReflection : MonoBehaviour
                 if (hit.collider.tag == "Mirror")
                 {
                     ray = new Ray(hit.point, Vector3.Reflect(ray.direction, hit.normal));
-                    Debug.Log("Reflected off mirror at: " + hit.point); // Log the reflection point
+                    mirrorHit = true; // Set the flag to true if a mirror is hit
                 }
                 else
                 {
@@ -54,8 +63,18 @@ public class RaycastReflection : MonoBehaviour
             {
                 lineRenderer.positionCount += 1;
                 lineRenderer.SetPosition(lineRenderer.positionCount - 1, ray.origin + ray.direction * remainingLength);
-                Debug.Log("Ray ended at: " + (ray.origin + ray.direction * remainingLength)); // Log where the ray ends
                 break; // Exit loop if no hit to avoid infinite loop
+            }
+        }
+
+        // Activate the spotlight only if a mirror is hit by the ray
+        if (spotlight != null)
+        {
+            spotlight.SetActive(mirrorHit); // Activate spotlight if a mirror is hit
+            if (mirrorHit)
+            {
+                spotlight.transform.position = hit.point; // Position at the end point of the ray
+                spotlight.transform.rotation = Quaternion.LookRotation(-hit.normal); // Rotate opposite to hit normal
             }
         }
     }
