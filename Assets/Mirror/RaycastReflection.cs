@@ -33,17 +33,28 @@ public class RaycastReflection : MonoBehaviour
         {
             if (Physics.Raycast(ray.origin, ray.direction, out hit, remainingLength))
             {
+                Debug.Log("Hit: " + hit.collider.name); // Log the name of the hit object
+
                 lineRenderer.positionCount += 1;
                 lineRenderer.SetPosition(lineRenderer.positionCount - 1, hit.point);
                 remainingLength -= Vector3.Distance(ray.origin, hit.point);
-                ray = new Ray(hit.point, Vector3.Reflect(ray.direction, hit.normal));
-                if (hit.collider.tag != "Mirror")
-                    break;
+
+                // Check if the hit object is tagged as "Mirror"
+                if (hit.collider.tag == "Mirror")
+                {
+                    ray = new Ray(hit.point, Vector3.Reflect(ray.direction, hit.normal));
+                    Debug.Log("Reflected off mirror at: " + hit.point); // Log the reflection point
+                }
+                else
+                {
+                    break; // Stop if the object is not a mirror
+                }
             }
             else
             {
                 lineRenderer.positionCount += 1;
                 lineRenderer.SetPosition(lineRenderer.positionCount - 1, ray.origin + ray.direction * remainingLength);
+                Debug.Log("Ray ended at: " + (ray.origin + ray.direction * remainingLength)); // Log where the ray ends
                 break; // Exit loop if no hit to avoid infinite loop
             }
         }
