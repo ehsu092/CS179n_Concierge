@@ -48,6 +48,8 @@ public class RaycastReflection : MonoBehaviour
                 lineRenderer.SetPosition(lineRenderer.positionCount - 1, hit.point);
                 remainingLength -= Vector3.Distance(ray.origin, hit.point);
 
+				
+				Debug.Log("Hit Object: " + hit.collider.gameObject.name + ", Tag: " + hit.collider.tag);
                 // Check if the hit object is tagged as "Mirror"
                 if (hit.collider.tag == "Mirror")
                 {
