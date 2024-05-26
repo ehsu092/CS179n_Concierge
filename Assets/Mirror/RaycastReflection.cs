@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI; // Import UnityEngine.UI to use Text component
 
 [RequireComponent(typeof(LineRenderer))]
 public class RaycastReflection : MonoBehaviour
@@ -8,11 +9,11 @@ public class RaycastReflection : MonoBehaviour
     public int reflections;
     public float maxLength;
     public GameObject spotlightPrefab; // Reference to the spotlight prefab
+    public Text successText; // Text to display when challenge is passed
 
     private LineRenderer lineRenderer;
     private Ray ray;
     private RaycastHit hit;
-    private Vector3 direction;
     private GameObject spotlight; // Reference to the spotlight GameObject
 
     private void Awake()
@@ -47,9 +48,8 @@ public class RaycastReflection : MonoBehaviour
                 lineRenderer.positionCount += 1;
                 lineRenderer.SetPosition(lineRenderer.positionCount - 1, hit.point);
                 remainingLength -= Vector3.Distance(ray.origin, hit.point);
-
-				
-				Debug.Log("Hit Object: " + hit.collider.gameObject.name + ", Tag: " + hit.collider.tag);
+                
+                Debug.Log("Hit Object: " + hit.collider.gameObject.name + ", Tag: " + hit.collider.tag);
                 // Check if the hit object is tagged as "Mirror"
                 if (hit.collider.tag == "Mirror")
                 {
@@ -79,5 +79,17 @@ public class RaycastReflection : MonoBehaviour
                 spotlight.transform.rotation = Quaternion.LookRotation(-hit.normal); // Rotate opposite to hit normal
             }
         }
+
+        // Activate the success text when the challenge is passed
+        if (mirrorHit && hit.collider.tag == "tv target" && successText != null)
+        {
+            StartCoroutine(DisplayTextAfterDelay());
+        }
+    }
+    private IEnumerator DisplayTextAfterDelay()
+    {
+        yield return new WaitForSeconds(3f);
+
+        successText.gameObject.SetActive(true);
     }
 }
