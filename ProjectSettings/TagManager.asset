@@ -8,6 +8,7 @@ TagManager:
   - tv target
   - Teleporter
   - SecondTeleporter
+  - CaptureCamera
   layers:
   - Default
   - TransparentFX
