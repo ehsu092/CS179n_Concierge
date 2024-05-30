@@ -14,7 +14,7 @@ public class PickupLeg : MonoBehaviour
     void Start()
     {
         // Find the Character object by accessing the first person controller
-        GameObject firstPersonController = GameObject.Find("Character");
+        GameObject firstPersonController = GameObject.Find("Player");
         if (firstPersonController != null)
         {
             character = firstPersonController.transform.GetChild(0).gameObject;

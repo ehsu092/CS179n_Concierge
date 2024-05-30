@@ -17,7 +17,7 @@ public class DoorController : MonoBehaviour
     void Start()
     {
         // Find the player object by accessing the first person controller
-        GameObject firstPersonController = GameObject.Find("Character");
+        GameObject firstPersonController = GameObject.Find("Player");
         if (firstPersonController != null)
         {
             player = firstPersonController.transform.GetChild(0).gameObject;
