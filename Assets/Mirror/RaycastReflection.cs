@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI; // Import UnityEngine.UI to use Text component
+using UnityEngine.UI;
 
 [RequireComponent(typeof(LineRenderer))]
 public class RaycastReflection : MonoBehaviour
@@ -15,6 +15,8 @@ public class RaycastReflection : MonoBehaviour
     private Ray ray;
     private RaycastHit hit;
     private GameObject spotlight; // Reference to the spotlight GameObject
+
+    private bool challengePassed = false;
 
     private void Awake()
     {
@@ -81,11 +83,29 @@ public class RaycastReflection : MonoBehaviour
         }
 
         // Activate the success text when the challenge is passed
-        if (mirrorHit && hit.collider.tag == "tv target" && successText != null)
+        if (mirrorHit && hit.collider.tag == "tv target" && successText != null && challengePassed == false )
         {
             StartCoroutine(DisplayTextAfterDelay());
+            IncrementChallenge();
+            challengePassed = true;
         }
     }
+    
+    // Method to increment the challenge count
+    private void IncrementChallenge()
+    {
+        // Find the pickup_flashlight script and call IncrementChallenge method
+        pickup_flashlight pickupScript = FindObjectOfType<pickup_flashlight>();
+        if (pickupScript != null)
+        {
+            pickupScript.IncrementChallenge();
+        }
+        else
+        {
+            Debug.LogError("pickup_flashlight script not found.");
+        }
+    }
+
     private IEnumerator DisplayTextAfterDelay()
     {
         yield return new WaitForSeconds(3f);

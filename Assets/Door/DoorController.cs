@@ -92,7 +92,7 @@ public class DoorController : MonoBehaviour
             float distance = Vector3.Distance(player.transform.position, door.transform.position);
 
             // Debug distance for troubleshooting
-            Debug.Log("Distance to door: " + distance);
+            // Debug.Log("Distance to door: " + distance);
 
             // Return true if the distance is within the interaction distance threshold
             return distance <= interactionDistance;

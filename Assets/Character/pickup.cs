@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections; // Required for using Coroutines
 
+[RequireComponent(typeof(LineRenderer))]
 public class Pickup : MonoBehaviour
 {
     public GameObject Gun;
@@ -16,8 +17,10 @@ public class Pickup : MonoBehaviour
     public Text pickupPromptText; // Text to prompt for pickup
 
     private bool isPickedUp = false; // Flag to track if the object is picked up
-    private int challenge = 0; // Challenge count, initialized to 0
+    public int challenge = 0; // Challenge count, initialized to 0
     private GameObject bottoms; // Reference to the "Bottoms" object
+
+    private bool challengePassed = false;
 
     // Start is called before the first frame update
     void Start()
@@ -88,10 +91,14 @@ public class Pickup : MonoBehaviour
             // Tolerance range based on challenge threshold
             float allowedDistance = challengeThreshold * pickupDistance;
 
-            if (distanceToChallenge <= allowedDistance)
+            if (distanceToChallenge <= allowedDistance && challengePassed == false)
             {
                 // Increase the challenge count
-                challenge++;
+                IncrementChallenge();
+
+                challengePassed = true;
+
+                //  Debug.Log("Challenge Count: " + challenge);
 
                 // Start coroutine to display success text after 5 seconds
                 StartCoroutine(DisplaySuccessTextWithDelay(2f));
@@ -171,6 +178,20 @@ public class Pickup : MonoBehaviour
 
             // Deactivate the success text
             successText.gameObject.SetActive(false);
+        }
+    }
+
+    private void IncrementChallenge()
+    {
+        // Find the pickup_flashlight script and call IncrementChallenge method
+        pickup_flashlight pickupScript = FindObjectOfType<pickup_flashlight>();
+        if (pickupScript != null)
+        {
+            pickupScript.IncrementChallenge();
+        }
+        else
+        {
+            Debug.LogError("pickup_flashlight script not found.");
         }
     }
 }
