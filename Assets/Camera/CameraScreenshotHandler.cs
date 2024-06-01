@@ -6,7 +6,6 @@ public class CameraScreenshotHandler : MonoBehaviour
 {
     public Camera mainCamera; // Drag the main camera here in the Unity Editor
     public Camera cameraToCapture; // Drag the capture camera here in the Unity Editor
-    public RenderTexture renderTexture;
     public string screenshotFilename = "camera_screenshot.png";
     public Transform playerTransform;
     public float detectionDistance = 5.0f; // Distance to trigger UI display
@@ -17,11 +16,7 @@ public class CameraScreenshotHandler : MonoBehaviour
 
     void Start()
     {
-        // Ensure the main camera and the camera to capture have their target textures set
-        mainCamera.targetTexture = renderTexture;
-        cameraToCapture.targetTexture = renderTexture;
-
-        // Disable the capture camera at the start
+        // Ensure the capture camera is disabled at the start
         cameraToCapture.enabled = false;
 
         // Hide UI text elements at start
@@ -74,20 +69,9 @@ public class CameraScreenshotHandler : MonoBehaviour
 
     void TakeCameraScreenshot()
     {
-        RenderTexture currentRT = RenderTexture.active;
-        RenderTexture.active = renderTexture;
-
-        cameraToCapture.Render();
-
-        Texture2D image = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGB24, false);
-        image.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
-        image.Apply();
-
-        RenderTexture.active = currentRT;
-
-        byte[] bytes = image.EncodeToPNG();
+        // Capture screenshot from the capture camera
         string path = Application.dataPath + "/" + screenshotFilename;
-        System.IO.File.WriteAllBytes(path, bytes);
+        ScreenCapture.CaptureScreenshot(path);
 
         Debug.Log("Camera screenshot taken and saved to " + path);
     }
