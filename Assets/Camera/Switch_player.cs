@@ -78,6 +78,11 @@ public class PlayerCameraSwitch : MonoBehaviour
             StartCoroutine(DisplayUITextsInOrder());
             player2UITextsDisplayed = true; // Set the flag to true to indicate that UI texts have been displayed
         }
+
+        if (Input.GetKeyDown(KeyCode.E) && currentPlayer == player2)
+        {
+            CaptureScene();
+        }
     }
 
     void SwitchPlayers()
@@ -136,6 +141,19 @@ public class PlayerCameraSwitch : MonoBehaviour
         {
             obj.SetActive(true);
         }
+    }
+
+    void CaptureScene()
+    {
+        // Generate a unique filename for the screenshot based on the current timestamp
+        string timestamp = System.DateTime.Now.ToString("yyyyMMddHHmmss");
+        string fileName = "Screenshot_" + timestamp + ".png";
+
+        // Capture the screenshot and save it
+        ScreenCapture.CaptureScreenshot(fileName);
+
+        // Log a message indicating that the screenshot has been captured
+        Debug.Log("Screenshot captured and saved as: " + fileName);
     }
 
     IEnumerator DisplayUITextsInOrder()
