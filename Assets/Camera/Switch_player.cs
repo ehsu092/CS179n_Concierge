@@ -3,33 +3,49 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+[RequireComponent(typeof(LineRenderer))]
+
 public class PlayerCameraSwitch : MonoBehaviour
 {
     public Transform player1;
     public Transform player2;
     public GameObject cameraObject;
-    public GameObject[] player1ObjectsToDeactivate; // Array of GameObjects to deactivate for player 1
-    public GameObject[] player1ObjectsToActivate;   // Array of GameObjects to activate for player 1
-    public GameObject[] player2ObjectsToDeactivate; // Array of GameObjects to deactivate for player 2
-    public GameObject[] player2ObjectsToActivate;   // Array of GameObjects to activate for player 2
-    public Text switchPromptText; // Reference to the UI text for switch prompt
-    public Text[] player2UITexts; // Array of UI texts for player 2
-    public float displayDuration = 3f; // Duration for which UI text is displayed
+    public GameObject[] player1ObjectsToDeactivate;
+    public GameObject[] player1ObjectsToActivate;
+    public GameObject[] player2ObjectsToDeactivate;
+    public GameObject[] player2ObjectsToActivate;
+    public Text switchPromptText;
+    public Text[] player2UITexts;
+    public float displayDuration = 3f;
+    public Light flashLight; // Reference to the light component
+    public float flashDuration = 0.1f; // Duration of the light flash
 
+    public RawImage photoDisplayImage;
+
+    public Text passchallenge;
+
+    // Manual input for challenge location
+    public float challengeLocationX;
+    public float challengeLocationY;
+    public float challengeLocationZ;
+    private Vector3 challengeLocation;
     private Transform currentPlayer;
     private Transform otherPlayer;
     private bool player2UITextsDisplayed;
-
+    private bool takingScreenshot = false; // Flag to indicate if a screenshot is being taken
+    private bool challengePassed = false;
     void Start()
     {
-        // Initialize the current player as player 1 and the other player as player 2
+        // Ensure the flash light is initially deactivated
+        flashLight.gameObject.SetActive(false);
+
+
         currentPlayer = player1;
         otherPlayer = player2;
 
-        // Disable switch prompt text at start
         switchPromptText.gameObject.SetActive(false);
 
-        // Disable player 2 UI texts at start
         foreach (Text text in player2UITexts)
         {
             text.gameObject.SetActive(false);
@@ -38,62 +54,82 @@ public class PlayerCameraSwitch : MonoBehaviour
 
     void Update()
     {
-        // Calculate the distance between player 1 and the camera
+        // Ensure the flash light is initially deactivated
+        flashLight.gameObject.SetActive(false);
+
         float distanceToCamera = Vector3.Distance(player1.position, cameraObject.transform.position);
         Debug.Log("Distance to camera: " + distanceToCamera);
 
-        // Check if player 1 is close enough to the camera to display the switch prompt text
         if (currentPlayer == player1 && distanceToCamera < 5f)
         {
-            // Display switch prompt text
             switchPromptText.gameObject.SetActive(true);
         }
         else
         {
-            // Hide switch prompt text if player 1 is far from the camera or if player 2 is active
             switchPromptText.gameObject.SetActive(false);
         }
 
-        // Check for 'E' key press to switch players
         if (Input.GetKeyDown(KeyCode.E) && currentPlayer == player1 && distanceToCamera < 5f)
         {
+            // Ensure the flash light is initially deactivated
+            flashLight.gameObject.SetActive(false);
+
             SwitchPlayers();
             DeactivateCamera();
-            DeactivateObjects(currentPlayer == player1 ? player1ObjectsToDeactivate : player2ObjectsToDeactivate);
-            ActivateObjects(currentPlayer == player1 ? player1ObjectsToActivate : player2ObjectsToActivate);
+            HandleObjectsActivation();
         }
 
-        // Check for 'Q' key press to switch back to the original player and activate the camera
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q) && currentPlayer == player2)
         {
+            // Ensure the flash light is initially deactivated
+            flashLight.gameObject.SetActive(false);
+            
             SwitchBackToOriginalPlayer();
             ActivateCamera();
-            DeactivateObjects(currentPlayer == player1 ? player1ObjectsToDeactivate : player2ObjectsToDeactivate);
-            ActivateObjects(currentPlayer == player1 ? player1ObjectsToActivate : player2ObjectsToActivate);
+            HandleObjectsActivation();
         }
 
-        // Check if the current player is player 2 and if the UI texts for player 2 have not been displayed yet
         if (currentPlayer == player2 && !player2UITextsDisplayed)
         {
+            // Ensure the flash light is initially deactivated
+            flashLight.gameObject.SetActive(false);
+
             StartCoroutine(DisplayUITextsInOrder());
-            player2UITextsDisplayed = true; // Set the flag to true to indicate that UI texts have been displayed
+            player2UITextsDisplayed = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.E) && currentPlayer == player2)
+        // if (Input.GetKeyDown(KeyCode.E) && currentPlayer == player2 && !takingScreenshot)
+        // {
+        //     // Ensure the flash light is initially deactivated
+        //     flashLight.gameObject.SetActive(false);
+            
+        //     takingScreenshot = true;
+
+        //     StartCoroutine(CaptureSceneWithFlash());
+        // }
+        if (Input.GetKeyDown(KeyCode.E) && currentPlayer == player2 && !takingScreenshot)
         {
-            CaptureScene();
+            // Ensure the flash light is initially deactivated
+            flashLight.gameObject.SetActive(false);
+
+            takingScreenshot = true;
+            challengeLocation = new Vector3(challengeLocationX, challengeLocationY, challengeLocationZ);
+            // accuracyText.text = "Challenge location: (" + challengeLocation.x + ", " + challengeLocation.y + ", " + challengeLocation.z + ")";
+            // accuracyText.gameObject.SetActive(true);
+
+            StartCoroutine(CaptureSceneWithFlash());
         }
     }
 
     void SwitchPlayers()
     {
-        // Disable the current player
-        currentPlayer.gameObject.SetActive(false);
+        takingScreenshot = false; // Ensure takingScreenshot flag is reset before switching players
 
-        // Enable the other player
+        flashLight.gameObject.SetActive(false);
+
+        currentPlayer.gameObject.SetActive(false);
         otherPlayer.gameObject.SetActive(true);
 
-        // Swap the current player and the other player
         Transform temp = currentPlayer;
         currentPlayer = otherPlayer;
         otherPlayer = temp;
@@ -101,13 +137,13 @@ public class PlayerCameraSwitch : MonoBehaviour
 
     void SwitchBackToOriginalPlayer()
     {
-        // Disable the current player
-        currentPlayer.gameObject.SetActive(false);
+        takingScreenshot = false; // Ensure takingScreenshot flag is reset before switching players
 
-        // Enable the other player
+        flashLight.gameObject.SetActive(false);
+
+        currentPlayer.gameObject.SetActive(false);
         otherPlayer.gameObject.SetActive(true);
 
-        // Swap the current player and the other player
         Transform temp = currentPlayer;
         currentPlayer = otherPlayer;
         otherPlayer = temp;
@@ -115,19 +151,42 @@ public class PlayerCameraSwitch : MonoBehaviour
 
     void DeactivateCamera()
     {
-        // Deactivate the camera object
+        // Ensure the flash light is initially deactivated
+        // flashLight.gameObject.SetActive(false);
+
         cameraObject.SetActive(false);
     }
 
     void ActivateCamera()
     {
-        // Activate the camera object
+        // Ensure the flash light is initially deactivated
+        // flashLight.gameObject.SetActive(false);
+
         cameraObject.SetActive(true);
+    }
+
+    void HandleObjectsActivation()
+    {
+        // Ensure the flash light is initially deactivated
+        // flashLight.gameObject.SetActive(false);
+
+        if (currentPlayer == player1)
+        {
+            DeactivateObjects(player1ObjectsToDeactivate);
+            ActivateObjects(player1ObjectsToActivate);
+        }
+        else if (currentPlayer == player2)
+        {
+            DeactivateObjects(player2ObjectsToDeactivate);
+            ActivateObjects(player2ObjectsToActivate);
+        }
     }
 
     void DeactivateObjects(GameObject[] objects)
     {
-        // Deactivate each object in the objects array
+        // Ensure the flash light is initially deactivated
+        // flashLight.gameObject.SetActive(false);
+
         foreach (GameObject obj in objects)
         {
             obj.SetActive(false);
@@ -136,34 +195,161 @@ public class PlayerCameraSwitch : MonoBehaviour
 
     void ActivateObjects(GameObject[] objects)
     {
-        // Activate each object in the objects array
+        // Ensure the flash light is initially deactivated
+        // flashLight.gameObject.SetActive(false);
+
         foreach (GameObject obj in objects)
         {
             obj.SetActive(true);
         }
     }
 
-    void CaptureScene()
+    IEnumerator CaptureSceneWithFlash()
     {
-        // Generate a unique filename for the screenshot based on the current timestamp
-        string timestamp = System.DateTime.Now.ToString("yyyyMMddHHmmss");
-        string fileName = "Screenshot_" + timestamp + ".png";
+        // takingScreenshot = true; // Set takingScreenshot flag to true when capturing scene
 
-        // Capture the screenshot and save it
-        ScreenCapture.CaptureScreenshot(fileName);
+        // Activate the light for the flash effect
+        flashLight.gameObject.SetActive(true);
+        flashLight.intensity = 3f;
 
-        // Log a message indicating that the screenshot has been captured
-        Debug.Log("Screenshot captured and saved as: " + fileName);
+        // Wait for the flash duration
+        yield return new WaitForSeconds(flashDuration);
+
+        // Deactivate the light
+        flashLight.gameObject.SetActive(false);
+
+        // Capture the screenshot
+        CaptureScene();
+
+        takingScreenshot = false; // Reset takingScreenshot flag after capturing scene
     }
 
+    // void CaptureScene()
+    // {
+    //     // Create a RenderTexture with the same dimensions as the camera's viewport
+    //     RenderTexture renderTexture = new RenderTexture(Screen.width, Screen.height, 24);
+
+    //     // Set the camera to render to the RenderTexture
+    //     Camera.main.targetTexture = renderTexture;
+    //     Camera.main.Render();
+
+    //     // Create a Texture2D to hold the screenshot
+    //     Texture2D screenshot = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
+
+    //     // Read the pixels from the RenderTexture and apply them to the Texture2D
+    //     RenderTexture.active = renderTexture;
+    //     screenshot.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
+    //     screenshot.Apply();
+
+    //     // Reset the camera's target texture
+    //     Camera.main.targetTexture = null;
+    //     RenderTexture.active = null;
+
+    //     // Encode the Texture2D as a PNG and save it to disk
+    //     byte[] bytes = screenshot.EncodeToPNG();
+    //     string timestamp = System.DateTime.Now.ToString("yyyyMMddHHmmss");
+    //     string fileName = "Screenshot_" + timestamp + ".png";
+    //     System.IO.File.WriteAllBytes(fileName, bytes);
+
+    //     Debug.Log("Screenshot captured and saved as: " + fileName);
+
+    //     // Display the captured photo for 2 seconds
+    //     StartCoroutine(DisplayPhotoForDuration(screenshot, 2f));
+    // }
+    void CaptureScene()
+    {
+        RenderTexture renderTexture = new RenderTexture(Screen.width, Screen.height, 24);
+        Camera.main.targetTexture = renderTexture;
+        Camera.main.Render();
+
+        Texture2D screenshot = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
+        RenderTexture.active = renderTexture;
+        screenshot.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
+        screenshot.Apply();
+
+        Camera.main.targetTexture = null;
+        RenderTexture.active = null;
+
+        byte[] bytes = screenshot.EncodeToPNG();
+        string timestamp = System.DateTime.Now.ToString("yyyyMMddHHmmss");
+        string fileName = "Screenshot_" + timestamp + ".png";
+        System.IO.File.WriteAllBytes(fileName, bytes);
+
+        Debug.Log("Screenshot captured and saved as: " + fileName);
+
+        // Calculate the distance between the challenge location and player2
+        float distanceToChallenge = Vector3.Distance(challengeLocation, player2.position);
+        Debug.Log("Distance to Challenge: " + distanceToChallenge);
+
+        // Define the maximum allowable distance for passing the challenge
+        float maxAllowableDistance = 10f; // Adjust this value as needed
+        Debug.Log("Max Allowable Distance: " + maxAllowableDistance);
+
+        // Calculate the accuracy percentage based on the distance to challenge location
+        float accuracyPercentage = 100f * (1f - (distanceToChallenge / maxAllowableDistance));
+        accuracyPercentage = Mathf.Clamp(accuracyPercentage, 0f, 100f); // Ensure the percentage is between 0 and 100
+        Debug.Log("Accuracy Percentage: " + accuracyPercentage);
+
+        StartCoroutine(DisplayPhotoForDuration(screenshot, 2f));
+
+        // Check if the accuracy percentage is greater than or equal to 90
+        if (accuracyPercentage >= 90f && !challengePassed)
+        {
+            IncrementChallenge();
+            challengePassed = true;
+
+            Debug.Log("Challenge Passed!");
+            passchallenge.gameObject.SetActive(true);
+            StartCoroutine(DisplayPass(3f));
+        }
+        else
+        {
+            Debug.Log("Challenge Failed!");
+        }
+    }
+
+
+
+
+    IEnumerator DisplayPhotoForDuration(Texture2D photo, float duration){
+        // Set the photo texture to the RawImage component
+        photoDisplayImage.texture = photo;
+
+        // Display the RawImage component
+        photoDisplayImage.gameObject.SetActive(true);
+
+        // Wait for the specified display duration
+        yield return new WaitForSeconds(duration);
+
+        // Hide the RawImage component after displaying for the specified duration
+        photoDisplayImage.gameObject.SetActive(false);
+    }
     IEnumerator DisplayUITextsInOrder()
     {
-        // Display each UI text for player 2 for a certain duration
         foreach (Text text in player2UITexts)
         {
             text.gameObject.SetActive(true);
             yield return new WaitForSeconds(displayDuration);
             text.gameObject.SetActive(false);
+        }
+    }
+    IEnumerator DisplayPass(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        passchallenge.gameObject.SetActive(false);
+    }
+
+    private void IncrementChallenge()
+    {
+        // Find the pickup_flashlight script and call IncrementChallenge method
+        pickup_flashlight pickupScript = FindObjectOfType<pickup_flashlight>();
+        if (pickupScript != null)
+        {
+            pickupScript.IncrementChallenge();
+        }
+        else
+        {
+            Debug.LogError("pickup_flashlight script not found.");
         }
     }
 }
