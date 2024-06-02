@@ -14,6 +14,13 @@ public class DoorController : MonoBehaviour
     private GameObject player;
     public Text interactionText;  // Reference to the UI Text element
 
+    // Audio properties
+    public AudioSource audioSource;
+    public AudioClip openClip;
+    public AudioClip closeClip;
+
+    private bool isMoving = false;
+
     void Start()
     {
         // Find the player object by accessing the first person controller
@@ -36,6 +43,22 @@ public class DoorController : MonoBehaviour
         {
             interactionText.gameObject.SetActive(false);
         }
+
+        // Get the AudioSource component
+        if (audioSource == null)
+        {
+            audioSource = door.GetComponent<AudioSource>();
+            if (audioSource == null)
+            {
+                Debug.LogError("AudioSource not found on the door object.");
+            }
+        }
+
+        // Deactivate the AudioSource initially
+        if (audioSource != null)
+        {
+            audioSource.enabled = false;
+        }
     }
 
     void Update()
@@ -52,6 +75,11 @@ public class DoorController : MonoBehaviour
             if (currentRot.y < openRot)
             {
                 door.transform.localEulerAngles = Vector3.Lerp(currentRot, new Vector3(currentRot.x, openRot, currentRot.z), speed * Time.deltaTime);
+                isMoving = true;
+            }
+            else
+            {
+                isMoving = false;
             }
         }
         else
@@ -59,6 +87,11 @@ public class DoorController : MonoBehaviour
             if (currentRot.y > closeRot)
             {
                 door.transform.localEulerAngles = Vector3.Lerp(currentRot, new Vector3(currentRot.x, closeRot, currentRot.z), speed * Time.deltaTime);
+                isMoving = true;
+            }
+            else
+            {
+                isMoving = false;
             }
         }
 
@@ -82,6 +115,24 @@ public class DoorController : MonoBehaviour
     public void ToggleDoor()
     {
         opening = !opening;
+
+        // Play the appropriate sound
+        if (audioSource != null)
+        {
+            audioSource.enabled = true;
+            if (opening && openClip != null)
+            {
+                audioSource.clip = openClip;
+                audioSource.Play();
+                StartCoroutine(DeactivateAudioAfterPlaying(openClip.length));
+            }
+            else if (!opening && closeClip != null)
+            {
+                audioSource.clip = closeClip;
+                audioSource.Play();
+                StartCoroutine(DeactivateAudioAfterPlaying(closeClip.length));
+            }
+        }
     }
 
     private bool IsPlayerClose()
@@ -101,5 +152,11 @@ public class DoorController : MonoBehaviour
         {
             return false;
         }
+    }
+
+    private IEnumerator DeactivateAudioAfterPlaying(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        audioSource.enabled = false;
     }
 }
