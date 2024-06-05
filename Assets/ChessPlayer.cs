@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
+
+[RequireComponent(typeof(LineRenderer))]
 public class ChessPlayerManager : MonoBehaviour
 {
     public GameObject Player;
@@ -17,6 +19,7 @@ public class ChessPlayerManager : MonoBehaviour
     private bool isChessPlayerActive = false; // Start as Player by default
     private bool challengePassed = false;
     private bool interactionDone = false; // Ensure interaction only happens once
+
 
     void Start()
     {
@@ -69,6 +72,7 @@ public class ChessPlayerManager : MonoBehaviour
             if (!challengePassed)
             {
                 StartCoroutine(WaitAndReactivatePlayer(3f));
+                IncrementChallenge();
                 challengePassed = true;
             }
         }
@@ -124,5 +128,19 @@ public class ChessPlayerManager : MonoBehaviour
 
         DeactivateChessPlayer();
         challengePassed = false;
+    }
+
+    private void IncrementChallenge()
+    {
+        // Find the pickup_flashlight script and call IncrementChallenge method
+        pickup_flashlight pickupScript = FindObjectOfType<pickup_flashlight>();
+        if (pickupScript != null)
+        {
+            pickupScript.IncrementChallenge();
+        }
+        else
+        {
+            Debug.LogError("pickup_flashlight script not found.");
+        }
     }
 }
