@@ -38,12 +38,12 @@ public class ButtonPressScript : MonoBehaviour {
     void Update()
     {
         bool start = false;
-        if (IsPlayerClose() && start == false){
-            timerRun = true;
-            start = true;
-        }
 
         if (Input.GetKeyDown(KeyCode.E) && IsPlayerClose()) {
+            if ( start == false){
+                timerRun = true;
+                start = true;
+            }
             Debug.Log("accessed");
             count++;
             Debug.Log(count);
