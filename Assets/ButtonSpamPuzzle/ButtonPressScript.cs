@@ -49,7 +49,7 @@ public class ButtonPressScript : MonoBehaviour {
             Debug.Log(count);
         }
 
-        if(timerRun && count < 5){
+        if(timerRun && count < 3){
             if(timeRemain > 0){
                 timeRemain -= Time.deltaTime;
                 //Debug.Log(timeRemain);
@@ -59,7 +59,7 @@ public class ButtonPressScript : MonoBehaviour {
                 timerRun = false;
             }
         }
-        else if (timerRun && count >= 5 && challengePassed == false){
+        else if (timerRun && count >= 3 && challengePassed == false){
             IncrementChallenge();
             challengePassed = true;
             //Debug.Log("FINISHED");
@@ -69,18 +69,6 @@ public class ButtonPressScript : MonoBehaviour {
         }
 
     }
-
-    /*
-    private void IncrementChallenge(){
-        // Find the pickup_flashlight script and call IncrementChallenge method
-        pickup_flashlight pickupScript = FindObjectOfType<pickup_flashlight>;
-        if (pickupScript!= null){
-            pickupScript.IncrementChallenge();
-        }
-        else {
-            Debug.LogError("pickup_flashlight script not found.");
-        }
-    } */
 
     private bool IsPlayerClose(){
         if (player != null)
