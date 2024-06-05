@@ -11,7 +11,7 @@ public class ButtonPressScript : MonoBehaviour {
 
     private bool challengePassed = false;
 
-    public float timeRemain = 15;
+    public float timeRemain = 30;
     public bool timerRun = false;
     public static double count = 0;
 
@@ -32,20 +32,24 @@ public class ButtonPressScript : MonoBehaviour {
         {
             Debug.LogError("FPSController not found. Make sure the FPSController object is in the scene.");
         }
-
-        timerRun = true;
     }
 
     // Update is called once per frame
     void Update()
     {
+        bool start = false;
+        if (IsPlayerClose() && start == false){
+            timerRun = true;
+            start = true;
+        }
+
         if (Input.GetKeyDown(KeyCode.E) && IsPlayerClose()) {
             Debug.Log("accessed");
             count++;
             Debug.Log(count);
         }
 
-        if(timerRun && count < 7){
+        if(timerRun && count < 5){
             if(timeRemain > 0){
                 timeRemain -= Time.deltaTime;
                 //Debug.Log(timeRemain);
@@ -55,7 +59,7 @@ public class ButtonPressScript : MonoBehaviour {
                 timerRun = false;
             }
         }
-        else if (timerRun && count >= 7){
+        else if (timerRun && count >= 5 && challengePassed == false){
             IncrementChallenge();
             challengePassed = true;
             //Debug.Log("FINISHED");
