@@ -4,8 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
 
-public class ButtonPressScript : MonoBehaviour
-{
+public class ButtonPressScript : MonoBehaviour {
     public GameObject Computer;
     public float interactionDistance = 10;
     private GameObject player;
@@ -57,7 +56,7 @@ public class ButtonPressScript : MonoBehaviour
             }
         }
         else if (timerRun && count >= 7){
-            //IncrementChallenge();
+            IncrementChallenge();
             challengePassed = true;
             //Debug.Log("FINISHED");
         }
@@ -94,6 +93,20 @@ public class ButtonPressScript : MonoBehaviour
         else
         {
             return false;
+        }
+    }
+
+    private void IncrementChallenge()
+    {
+        // Find the pickup_flashlight script and call IncrementChallenge method
+        pickup_flashlight pickupScript = FindObjectOfType<pickup_flashlight>();
+        if (pickupScript != null)
+        {
+            pickupScript.IncrementChallenge();
+        }
+        else
+        {
+            Debug.LogError("pickup_flashlight script not found.");
         }
     }
 }
