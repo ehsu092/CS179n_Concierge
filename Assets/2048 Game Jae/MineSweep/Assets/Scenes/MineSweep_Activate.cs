@@ -1,4 +1,5 @@
 using UnityEngine;
+using KinematicCharacterController.Examples;
 
 public class GridGameTrigger : MonoBehaviour
 {
@@ -7,7 +8,7 @@ public class GridGameTrigger : MonoBehaviour
     public float interactionDistance = 3.0f;  // Distance within which the player can interact
     private bool isNearCube = false;
 
-    private CameraController cameraController;
+    private ExampleCharacterCamera cameraController;
 
     void Start()
     {
@@ -18,11 +19,11 @@ public class GridGameTrigger : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        // Get reference to the CameraController
-        cameraController = Camera.main.GetComponent<CameraController>();
+        // Get reference to the ExampleCharacterCamera script
+        cameraController = Camera.main.GetComponent<ExampleCharacterCamera>();
         if (cameraController == null)
         {
-            Debug.LogError("CameraController script not found on the main camera.");
+            Debug.LogError("ExampleCharacterCamera script not found on the main camera.");
         }
     }
 
