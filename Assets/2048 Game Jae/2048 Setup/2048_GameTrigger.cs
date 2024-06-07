@@ -7,7 +7,7 @@ public class MiniGameTrigger : MonoBehaviour
     public GameObject miniGameCanvas;  // Reference to the Canvas GameObject
     public Transform cube;             // Reference to the Cube Transform
     public Transform player;           // Reference to the Player Transform
-    public float interactionDistance = 3.0f;  // Distance within which the player can interact
+    public float interactionDistance = 1.0f;  // Distance within which the player can interact
     private bool isNearCube = false;
 
     void Start()
