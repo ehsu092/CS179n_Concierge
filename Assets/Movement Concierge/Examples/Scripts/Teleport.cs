@@ -28,7 +28,7 @@ public class Teleport : MonoBehaviour
                 
                 // pickupScript.challenge = 7;
                 // Check if the challenge count is less than 7
-                if (pickupScript.challenge < 6)
+                if (pickupScript.challenge < 7)
                 {
                     // Calculate the teleport target position
                     Vector3 teleportTargetPosition = new Vector3(targetX, targetY, targetZ);
