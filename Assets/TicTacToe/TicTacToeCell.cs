@@ -1,26 +1,32 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TicTacToeCell : MonoBehaviour
 {
     public int cellIndex;
-    private Renderer renderer;
+    public Texture2D xTexture; // Texture for X
+    public Texture2D oTexture; // Texture for O
+    private MeshRenderer meshRenderer; // Renderer for the mesh
     private bool isClickable = true; // Track if the cell is clickable
 
     void Start()
     {
-        renderer = GetComponent<Renderer>();
+        meshRenderer = GetComponent<MeshRenderer>();
+        meshRenderer.material = new Material(Shader.Find("Unlit/Transparent"));
+        meshRenderer.material.color = Color.white; // Set the base color to white
     }
 
     public void SetSymbol(string symbol)
     {
-        // Change color to indicate the player's move
+        // Set the texture based on the player's move
         if (symbol == "X")
-            renderer.material.color = Color.red;
+        {
+            meshRenderer.material.mainTexture = xTexture;
+        }
         else if (symbol == "O")
-            renderer.material.color = Color.blue;
-        
+        {
+            meshRenderer.material.mainTexture = oTexture;
+        }
+
         // Disable collider to make the cell unclickable after being clicked
         if (symbol != "")
         {
